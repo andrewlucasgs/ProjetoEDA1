@@ -5,6 +5,8 @@
 /*                                                         */
 /*                             Andrew Lucas Guedes de Souza*/
 /*                                     Matrícula: 160023921*/
+/*                              Nivaldo Pereira Lopo Junior*/
+/*                                     Matrícula: 120039460*/
 /***********************************************************/
 
 /*Importando bibliotecas*/
