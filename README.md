@@ -3,6 +3,7 @@
 ***
 #### Alunos:
 - Andrew Lucas Guedes de Souza - 16/0023921
+- Nivaldo Pereira Lopo Junior - 12/0039460
 ---
 ## Relatório de Projeto
 #### Índice
