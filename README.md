@@ -7,10 +7,10 @@
 ---
 ## Relatório de Projeto
 #### Índice
-[1. Objetivo do projeto](#1-Objetivo-do-projeto)  
-[2. Requisitos do projeto](#2-Requisitos-do-projeto)  
-[3. Falhas do projeto](#3-Falhas-do-projeto)  
-[4. Melhorias do projeto](#4-Melhorias-do-projeto)  
+[1. Objetivo do projeto](#1-objetivo-do-projeto)  
+[2. Requisitos do projeto](#2-requisitos-do-projeto)  
+[3. Falhas do projeto](#3-falhas-do-projeto)  
+[4. Melhorias do projeto](#4-melhorias-do-projeto)  
 
 #### 1. Objetivo do projeto
 <p> O projeto visa o desenvolvimento de um simulador de gerenciamento de memória em sistemas operacionais, utilizando a linguagem C. </p>  
