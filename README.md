@@ -18,7 +18,7 @@
 
 - [ ] O programa deve ser capaz de imprimir, a qualquer momento, quais posições de memória estão ocupadas (P) e quais estão livres (H). Imagine que a memória é um grande vetor onde cada posição armazena um Kbyte.
 
-- [ ] Além das opções para inclusão de processos na memória e impressão, o programa deve ter ma opção de sair (deixar o programa).
+- [ ] Além das opções para inclusão de processos na memória e impressão, o programa deve ter a opção de sair (deixar o programa).
 
 - [ ]  O programa deve oferecer a opção de gravar os dados em arquivo. E quando o programa for iniciado, deve ser possível ler as informações desse arquivo para continuar a execução da simulação da memória.
 
