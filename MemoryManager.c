@@ -27,9 +27,9 @@ typedef struct MemoryList{
 }MemorySpace;
 
 typedef struct MemoryHeader{
-  MemorySpace first;
-  MemorySpace last;
-  int free_space;
+  MemorySpace *first; // Aponta para o primeiro processo;
+  MemorySpace *last; // Aponta para o ultimo processo;
+  int free_space; // Indica quantidade de memoria livre;
 }Memory;
 
 
@@ -43,19 +43,25 @@ Memory* initialize(void); // Inicializa Lista;
 void shut(void); // Chama encerramento do programa;
 int swap(void); // Grava dados da memoria em disco;
 //char* list2String(int i) // Converte lista para string p/ gravacao em disco;
-//int readSwap(void);
-//
+//int readSwap(void); // Realiza leitura da memoria gravada em disco caso exista;
+//void newProcess(void); // Cria novo processo e o aloca na memoria, se possivel;
+int spaceVerify(int processSize); // Verifica se ha espaco suficiente para alocar processo;
+//void showMemory(); // Imprime estado atual da memoria na tela;
+//void getProcess(char label); // Seleciona processo, buscando-o pela label;
+//void shutProcess(char label); // Encerra processo
+//int freeSpaceCounter(); // Retorna a quantidade de espaco livre;
 
 int main() {
   int op=-1;
   setlocale(LC_ALL,"Portuguese"); // Permite utilizacao de caracteres especiais;
   for(;;){
+    system("clear");
     printf("\n");
     printf("1 - Criar novo processo. \n"); // Cria novo processo, e insere ele na memoria;
     printf("2 - Mostrar processos em execução. \n"); // Mostra todos processos em execucao;
     printf("3 - Encerrar processo em execução. \n"); // Forca encerramento de processo, antes do tempo estabelecido;
-    printf("4 - Congelar processos\n"); // Para o tempo de execucao dos processos;
-    printf("0 - Fechar\n");
+    printf("4 - Congelar processos \n"); // Para o tempo de execucao dos processos;
+    printf("0 - Fechar \n");
     scanf("%d", &op);
     switch (op) {
       case 0: system("clear");
@@ -114,4 +120,11 @@ int swap(void){
   printf ("Swap realizado com sucesso!.\n");
   fclose (fp);
   return 0;
+}
+
+int spaceVerify(int processSize){
+  if(memory->free_space >= processSize)
+    return 1;
+  else
+    return 0;
 }
