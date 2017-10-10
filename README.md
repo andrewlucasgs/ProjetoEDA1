@@ -1,11 +1,20 @@
 # Gerenciamento de memória em sistemas operacionais
 #### Projeto para a disciplina Estruturas de Dados e Algoritmos
 ***
-
-##### Alunos:
+#### Alunos:
 - Andrew Lucas Guedes de Souza - 16/0023921
+---
+## Relatório de Projeto
+#### Índice
+[1. Objetivo do projeto](#1-Objetivo-do-projeto)  
+[2. Requisitos do projeto](#2-Requisitos-do-projeto)  
+[3. Falhas do projeto](#3-Falhas-do-projeto)  
+[4. Melhorias do projeto](#4-Melhorias-do-projeto)  
 
-## Requisitos do projeto:
+#### 1. Objetivo do projeto
+<p> O projeto visa o desenvolvimento de um simulador de gerenciamento de memória em sistemas operacionais, utilizando a linguagem C. </p>  
+
+#### 2. Requisitos do projeto
 - [ ] Os processos devem ter como parâmetros o seu tamanho (em Kbytes) e o tempo de execução (em segundos).
 
 - [ ] Os processos devem ser alocados na memória de acordo com o seu tamanho e devem ter um identificador (label).
@@ -23,3 +32,7 @@
 - [ ]  O programa deve oferecer a opção de gravar os dados em arquivo. E quando o programa for iniciado, deve ser possível ler as informações desse arquivo para continuar a execução da simulação da memória.
 
 - [ ] A gerência de espaços de processo (P) e buracos (H) na memória deve ser feito por meio de uma lista circular duplamente encadeada, com cabeçalho. Nesse caso, o aluno deve desenhar o nó considerando pelo menos: tipo de nó (P ou H), posição de memória inicial, tamanho da área de memória livre ou ocupada.
+
+#### 3. Falhas do projeto
+
+#### 4. Melhorias do projeto
