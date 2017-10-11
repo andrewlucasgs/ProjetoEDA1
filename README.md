@@ -12,6 +12,9 @@
 [3. Falhas do projeto](#3-falhas-do-projeto)  
 [4. Melhorias do projeto](#4-melhorias-do-projeto)  
 
+#### 1. Introdução do projeto
+Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a memória, manipulando espaços na memória, alguns com processos, outros livres. Os processos serão executados por um período de tempo definido pelo usuário, e inserção de um novo processo na memória, será feita utilizando o método *First-Fit*, que utiliza a primeira lacuna que encontrar com tamanho suficiente para alocar o processo, esse método é o que possui melhor performance em comparação com os outros métodos.
+
 #### 1. Objetivo do projeto
 <p> O projeto visa o desenvolvimento de um simulador de gerenciamento de memória em sistemas operacionais, utilizando a linguagem C. </p>  
 
@@ -37,3 +40,19 @@
 #### 3. Falhas do projeto
 
 #### 4. Melhorias do projeto
+
+## Relatórios individuais
+
+#### Andrew Lucas Guedes de Souza 16/0023921
+###### Atividades:
+-
+-
+-
+###### Estudos:
+-
+-
+-
+###### Dificuldades:
+-
+-
+-

@@ -23,6 +23,7 @@ typedef struct MemoryList{
   int type; // P -> processo; H -> buraco;
   char label;
   int size;
+  int startAt;
   int duration;
   struct MemoryList *next;
   struct MemoryList *prev;
@@ -30,7 +31,6 @@ typedef struct MemoryList{
 
 typedef struct MemoryHeader{
   MemorySpace *first; // Aponta para o primeiro processo;
-  MemorySpace *last; // Aponta para o ultimo processo;
   int free_space; // Indica quantidade de memoria livre;
 }Memory;
 
@@ -41,21 +41,23 @@ Memory *memory; // Cabecalho da memoria;
 
 
 /*DECLARACAO DE FUNCOES*/
-Memory* initialize(void); // Inicializa Lista;
+void initialize(void); // Inicializa Lista;
 void shut(void); // Chama encerramento do programa;
 int swap(void); // Grava dados da memoria em disco;
-//char* list2String(int i) // Converte lista para string p/ gravacao em disco;
-//int readSwap(void); // Realiza leitura da memoria gravada em disco caso exista;
-//void newProcess(void); // Cria novo processo e o aloca na memoria, se possivel;
+int readSwap(void); // Realiza leitura da memoria gravada em disco caso exista;
+void initializeProcess(char label, int size, int duration); // Cria novo processo e o aloca na memoria, se possivel;
+//void newProcess(void); // Recebe parametros de criacao de um processo;
 int spaceVerify(int processSize); // Verifica se ha espaco suficiente para alocar processo;
 //void showMemory(); // Imprime estado atual da memoria na tela;
 //void getProcess(char label); // Seleciona processo, buscando-o pela label;
 //void shutProcess(char label); // Encerra processo
 //int freeSpaceCounter(); // Retorna a quantidade de espaco livre;
+int findSpace(int size);
 
 int main() {
   int op=-1;
   setlocale(LC_ALL,"Portuguese"); // Permite utilizacao de caracteres especiais;
+  initialize(); // Inicia memoria;
   for(;;){
     system("clear");
     printf("\n");
@@ -85,12 +87,16 @@ int main() {
   return 0;
 }
 
-Memory* initialize(void){
+void initialize(void){
   int i;
+  MemorySpace *hole;
+  hole = (MemorySpace*) malloc(sizeof(MemorySpace));
+  hole->size = MEMORY_SIZE;
+  memory->free_space = MEMORY_SIZE;
+  memory->first = hole;
   for (i=0;i<MEMORY_SIZE;i++){
     MEMORY_PART[i] = H;
   }
-  return NULL;
 }
 
 void shut(void){
@@ -113,15 +119,70 @@ void shut(void){
 
 int swap(void){
   FILE *fp;
+  MemorySpace *p;
+  p = memory->first;
   fp = fopen ("swap.txt", "w");
   if (fp == NULL) {
      printf ("Houve um erro ao gravar a memória em disco.\n");
      return 1;
   }
-
+  for(p = memory->first; p != NULL;p = p->next){
+    fprintf(fp, "%c %d %d\n", p->label, p->size, p->duration);
+  }
   printf ("Swap realizado com sucesso!.\n");
   fclose (fp);
   return 0;
+}
+
+int readSwap(void){
+  FILE *fp;
+  int size, duration;
+  char label;
+  fp = fopen ("swap.txt", "r");
+  if (fp == NULL) {
+     printf ("Houve um erro ao ler a memória em disco.\n");
+     return 1;
+  }
+  while( (fscanf(fp,"%c %d %d\n", &label, &size, &duration))!=EOF )
+    initializeProcess(label, size, duration);
+  printf ("Dados restaurados com sucesso!.\n");
+  fclose (fp);
+  return 0;
+}
+
+void initializeProcess(char label, int size, int duration){
+  MemorySpace *process, *aux;
+  int i;
+  process = (MemorySpace*) malloc(sizeof(MemorySpace));
+  process->type = P;
+  process->label = label;
+  process->size = size;
+  process->duration = duration;
+  if(spaceVerify(process->size)){
+    i = findSpace(size);
+    if(i == -1){
+      // compactMemory();
+    }
+    for (aux = memory->first; aux != NULL; aux = aux->next){
+      if(aux->type == H || aux->size >= size){
+
+      }
+    }
+
+  }else{
+    printf("Não foi possível alocar memória para o processo: %c", process->label);
+    free(process);
+  }
+}
+
+int findSpace(int size){
+  MemorySpace *p;
+  for (p = memory->first; p != NULL; p = p->next){
+    if(p->type == H || p->size >= size){
+      return p->startAt;
+    }
+  }
+  return -1;
 }
 
 int spaceVerify(int processSize){
