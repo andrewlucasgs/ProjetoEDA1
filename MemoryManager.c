@@ -7,6 +7,8 @@
 /*                                     Matrícula: 160023921*/
 /*                              Nivaldo Pereira Lopo Junior*/
 /*                                     Matrícula: 120039460*/
+/*                                     Max Henrique Barbosa*/
+/*                                     Matrícula: 160047013*/
 /***********************************************************/
 
 /*Importando bibliotecas*/
