@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include<locale.h>
+#include<unistd.h>
 
 #define MEMORY_SIZE 10
 #define P 1
@@ -44,7 +45,7 @@ void shut(Memory *memory); // Chama encerramento do programa;
 int swap(Memory *memory); // Grava dados da memoria em disco;
 void readSwap(Memory *memory, FILE *fp); // Realiza leitura da memoria gravada em disco caso exista;
 void initializeProcess(Memory *memory, char label, int size, int duration); // Cria novo processo e o aloca na memoria, se possivel;
-//void newProcess(Memory *memory); // Recebe parametros de criacao de um processo;
+void newProcess(Memory *memory); // Recebe parametros de criacao de um processo;
 int spaceVerify(Memory *memory, int processSize); // Verifica se ha espaco suficiente para alocar processo;
 //void showMemory(Memory *memory); // Imprime estado atual da memoria na tela;
 //void getProcess(Memory *memory, char label); // Seleciona processo, buscando-o pela label;
@@ -71,6 +72,7 @@ int main() {
               shut(memory);
               break;
       case 1: system("clear");
+              newProcess(memory);
               break;
       case 2: system("clear");
               break;
@@ -92,6 +94,7 @@ void initialize(Memory *memory){
   MemorySpace *hole  = (MemorySpace*) malloc(sizeof(MemorySpace));
   hole->type = H;
   hole->size = MEMORY_SIZE;
+  hole->startAt = 0;
   hole->next = hole;
   hole->prev = hole;
   memory->free_space = MEMORY_SIZE;
@@ -112,6 +115,18 @@ void initialize(Memory *memory){
      return;
 
   }
+}
+
+void newProcess(Memory *memory) {
+  char label;
+  int duration, size;
+  printf("Digite um rótulo para o processo (1 caracter): \n");
+  scanf(" %c", &label);
+  printf("Tamanho (kbit): \n");
+  scanf(" %d", &size);
+  printf("Duração (s): \n");
+  scanf(" %d", &duration);
+  initializeProcess(memory, label, size, duration);
 }
 
 void shut(Memory *memory){
@@ -147,7 +162,7 @@ int swap(Memory *memory){
       fprintf(fp, "%c %d %d\n", p->label, p->size, p->duration);
     }
     p = p->next;
-  }while(p != memory->first)
+  }while(p != memory->first);
   printf ("Swap realizado com sucesso!.\n");
   fclose (fp);
   return 0;
@@ -169,6 +184,7 @@ void readSwap(Memory *memory, FILE *fp){
 
 void initializeProcess(Memory *memory, char label, int size, int duration){
   MemorySpace *process, *aux;
+  aux = memory->first;
   int i;
   process = (MemorySpace*) malloc(sizeof(MemorySpace));
   process->type = P;
@@ -180,28 +196,35 @@ void initializeProcess(Memory *memory, char label, int size, int duration){
     if(i == -1){
       // compactMemory();
     }
-    for (aux = memory->first; aux != NULL; aux = aux->next){
+    do{
       if(aux->type == H || aux->size > size){
         aux->prev->next = process; //anterior espaco vazio aponta para novo processo
         process->prev = aux->prev->next; // o novo processo aponta para o anterior
         aux->size -= process->size; // Reduz o tamanho do buraco de acordo com o tamanho do procsesso
         process->next = aux; // novo processo aponta para o buraco;
         aux->prev = process; // buraco aponta para novo processo
-        free(aux);
-        aux = NULL;
+        process->startAt = aux->startAt; // copia endereço de memoria do buraco para o proceso
+        aux->startAt = aux->startAt + process->size + 1; // define novo endereco de memoria para o buraco;
+        memory->free_space -= process->size;
+        return;
       }else if(aux->type == H || aux->size == size){
         aux->prev->next = process; //anterior espaco vazio aponta para novo processo
         process->prev = aux->prev->next; // o novo processo aponta para o anterior
         process->next = aux->next; // novo processo aponta para o proximo  espaco após o buraco;
         aux->next->prev = process; // o espaco apoos o buraco aponta para novo processo
+        process->startAt = aux->startAt;
+        memory->free_space -= process->size;
         free(aux);
-        aux = NULL;
+        return;
       }
-    }
-
+      printf("flag\n" );
+      aux = aux->next;
+    }while(aux != memory->first);
   }else{
     printf("Não foi possível alocar memória para o processo: %c", process->label);
+    system("clear");
     free(process);
+    return;
   }
 }
 

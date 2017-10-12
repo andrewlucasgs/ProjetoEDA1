@@ -19,11 +19,11 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 <p> O projeto visa o desenvolvimento de um simulador de gerenciamento de memória em sistemas operacionais, utilizando a linguagem C. </p>  
 
 #### 2. Requisitos do projeto
-- [ ] Os processos devem ter como parâmetros o seu tamanho (em Kbytes) e o tempo de execução (em segundos).
+- [x] Os processos devem ter como parâmetros o seu tamanho (em Kbytes) e o tempo de execução (em segundos).
 
-- [ ] Os processos devem ser alocados na memória de acordo com o seu tamanho e devem ter um identificador (label).
+- [x] Os processos devem ser alocados na memória de acordo com o seu tamanho e devem ter um identificador (label).
 
-- [ ] O processo deve ser colocado na primeira região de memória (a contar do início para o final da memória) onde esse processo couber.
+- [x] O processo deve ser colocado na primeira região de memória (a contar do início para o final da memória) onde esse processo couber.
 
 - [ ] O programa deve tentar encontrar uma forma de reorganizar os processos na memória de modo a acomodar o novo processo. Se depois dessa tentativa não houver espaço disponível, deve-se imprimir a seguinte mensagem: "Não foi possível alocar memória para o processo: [label do processo]".
 
@@ -31,9 +31,9 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 
 - [ ] O programa deve ser capaz de imprimir, a qualquer momento, quais posições de memória estão ocupadas (P) e quais estão livres (H). Imagine que a memória é um grande vetor onde cada posição armazena um Kbyte.
 
-- [ ] Além das opções para inclusão de processos na memória e impressão, o programa deve ter a opção de sair (deixar o programa).
+- [x] Além das opções para inclusão de processos na memória e impressão, o programa deve ter a opção de sair (deixar o programa).
 
-- [ ]  O programa deve oferecer a opção de gravar os dados em arquivo. E quando o programa for iniciado, deve ser possível ler as informações desse arquivo para continuar a execução da simulação da memória.
+- [x]  O programa deve oferecer a opção de gravar os dados em arquivo. E quando o programa for iniciado, deve ser possível ler as informações desse arquivo para continuar a execução da simulação da memória.
 
 - [ ] A gerência de espaços de processo (P) e buracos (H) na memória deve ser feito por meio de uma lista circular duplamente encadeada, com cabeçalho. Nesse caso, o aluno deve desenhar o nó considerando pelo menos: tipo de nó (P ou H), posição de memória inicial, tamanho da área de memória livre ou ocupada.
 
