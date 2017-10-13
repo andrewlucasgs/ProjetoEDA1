@@ -147,21 +147,38 @@ void newProcess(Memory *memory) {
 }
 
 void shut(Memory *memory){
-  int op=0;
-  char resp;
-  printf("Deseja salvar o estado atual da memória para continuar depois?[s/n]\n");
-  scanf(" %c", &resp);
-  if(resp == 's' || resp == 'S'){
-    op = swap(memory);
+  int op=0, process_check = 0;
+  char resp, confirma;
+  MemorySpace *p;
+  p = memory->first;
+  printf("Deseja realmente sair? [s/n]\n");
+  scanf(" %c", &confirma);
+  if(confirma == 'n' || confirma == 'N'){
+    return;
   }
-  if (op == 1) {
-    printf("Deseja continuar mesmo assim?[s/n]\n");
-    scanf(" %c", &resp);
-    if(resp == 'n' || resp == 'N'){
-      return;
+  do{
+    if(p->type == P){
+      process_check++;
     }
+    p = p->next;
+  }while(p != memory->first);
+  if(process_check != 0){
+      printf("Deseja salvar o estado atual da memória para continuar depois?[s/n]\n");
+      scanf(" %c", &resp);
+      if(resp == 's' || resp == 'S'){
+        op = swap(memory);
+      }
+      if (op == 1) {
+        printf("Deseja continuar mesmo assim?[s/n]\n");
+        scanf(" %c", &resp);
+        if(resp == 'n' || resp == 'N'){
+          return;
+        }
+      }
+  }/*fim-if-process_check*/
+  if(confirma == 's' || confirma == 'S'){
+      exit(0);
   }
-  exit(0);
 }
 
 int swap(Memory *memory){
