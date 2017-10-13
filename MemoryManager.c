@@ -47,11 +47,12 @@ void readSwap(Memory *memory, FILE *fp); // Realiza leitura da memoria gravada e
 void initializeProcess(Memory *memory, char label, int size, int duration); // Cria novo processo e o aloca na memoria, se possivel;
 void newProcess(Memory *memory); // Recebe parametros de criacao de um processo;
 int spaceVerify(Memory *memory, int processSize); // Verifica se ha espaco suficiente para alocar processo;
-//void showMemory(Memory *memory); // Imprime estado atual da memoria na tela;
+void showMemory(Memory *memory); // Imprime estado atual da memoria na tela;
 //void getProcess(Memory *memory, char label); // Seleciona processo, buscando-o pela label;
 //void shutProcess(Memory *memory, char label); // Encerra processo
 //int freeSpaceCounter(Memory *memory); // Retorna a quantidade de espaco livre;
 int findSpace(Memory *memory, int size);
+int compactMemory(Memory *memory);
 
 int main() {
   int op=-1;
@@ -75,6 +76,7 @@ int main() {
               newProcess(memory);
               break;
       case 2: system("clear");
+              showMemory(memory);
               break;
       case 3: system("clear");
               break;
@@ -111,6 +113,8 @@ void initialize(Memory *memory){
        fclose(fp);
        return;
      }
+     remove("swap.txt");
+
      fclose(fp);
      return;
 
@@ -178,6 +182,7 @@ void readSwap(Memory *memory, FILE *fp){
   while( (fscanf(fp,"%c %d %d\n", &label, &size, &duration))!=EOF )
     initializeProcess(memory, label, size, duration);
   printf ("Dados restaurados com sucesso!.\n");
+  remove("swap.txt");
   fclose (fp);
   return;
 }
@@ -185,7 +190,7 @@ void readSwap(Memory *memory, FILE *fp){
 void initializeProcess(Memory *memory, char label, int size, int duration){
   MemorySpace *process, *aux;
   aux = memory->first;
-  int i;
+  int i, comp;
   process = (MemorySpace*) malloc(sizeof(MemorySpace));
   process->type = P;
   process->label = label;
@@ -194,7 +199,7 @@ void initializeProcess(Memory *memory, char label, int size, int duration){
   if(spaceVerify(memory, process->size)){
     i = findSpace(memory, size);
     if(i == -1){
-      // compactMemory();
+      comp = compactMemory(memory);
     }
     do{
       if(aux->type == H || aux->size > size){
@@ -228,13 +233,41 @@ void initializeProcess(Memory *memory, char label, int size, int duration){
   }
 }
 
+int compactMemory(Memory *memory){
+  FILE *fp;
+  MemorySpace *p;
+  int size, duration;
+  char label;
+  p = memory->first;
+  fp = fopen ("temp.txt", "w");
+  if (fp == NULL) {
+     printf ("Erro na compactação\n");
+     fclose (fp);
+     return 0;
+  }
+  do{
+    if(p->type == P){
+      fprintf(fp, "%c %d %d\n", p->label, p->size, p->duration);
+    }
+    p = p->next;
+  }while(p != memory->first);
+  fclose (fp);
+  fp = fopen ("temp.txt", "r");
+  while( (fscanf(fp,"%c %d %d\n", &label, &size, &duration))!=EOF )
+    initializeProcess(memory, label, size, duration);
+  fclose (fp);
+  return 1;
+}
+
 int findSpace(Memory *memory, int size){
   MemorySpace *p;
-  for (p = memory->first; p != NULL; p = p->next){
+  p = memory->first;
+  do{
     if(p->type == H || p->size >= size){
       return p->startAt;
     }
-  }
+    p = p->next;
+  }while(p != memory->first);
   return -1;
 }
 
@@ -243,4 +276,20 @@ int spaceVerify(Memory *memory, int processSize){
     return 1;
   else
     return 0;
+}
+
+void showMemory(Memory *memory){
+  MemorySpace *p;
+  p = memory->first;
+  printf("Processo \t Tamanho \t Endereço\n");
+  do{
+    if(p->type == P)
+      printf("%c \t %d \t %d\n", p->label, p->size, p->startAt);
+    p = p->next;
+  }while(p != memory->first);
+  printf("Memória Livre: %d\n", memory->free_space);
+  printf("Memória Ocupada: %d\n", MEMORY_SIZE - memory->free_space);
+  printf("Memória Total: %d\n", MEMORY_SIZE);
+  printf("Press [Enter] key to continue.");
+  while(getchar()!='\n'); // option TWO to clean stdin
 }
