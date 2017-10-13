@@ -133,12 +133,14 @@ void initialize(Memory *memory){
 void newProcess(Memory *memory) {
   char label;
   int duration, size, id;
+  srand(time(NULL)); /*parameter for randamization of process duration */
   printf("Digite um rótulo para o processo (1 caracter): \n");
   scanf(" %c", &label);
   printf("Tamanho (kbit): \n");
   scanf(" %d", &size);
-  printf("Duração (s): \n");
-  scanf(" %d", &duration);
+  duration = rand()%171+10;
+  printf("O processo tem %d segundos de duração.\n", duration);
+  sleep(2);
   id = idGeneretor;
   idGeneretor++;
   initializeProcess(memory, id, label, size, duration);
