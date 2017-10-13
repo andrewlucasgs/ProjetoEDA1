@@ -134,15 +134,15 @@ void newProcess(Memory *memory) {
   char label;
   int duration, size, id;
   srand(time(NULL)); /*parameter for randamization of process duration */
+  id = idGeneretor;
+  idGeneretor++;
+  duration = rand()%171+10;
+  printf("ID do processo: %d\n", id);
+  printf("O processo tem %d segundos de duração.\n", duration);
   printf("Digite um rótulo para o processo (1 caracter): \n");
   scanf(" %c", &label);
   printf("Tamanho (kbit): \n");
   scanf(" %d", &size);
-  duration = rand()%171+10;
-  printf("O processo tem %d segundos de duração.\n", duration);
-  sleep(2);
-  id = idGeneretor;
-  idGeneretor++;
   initializeProcess(memory, id, label, size, duration);
 }
 
@@ -194,7 +194,7 @@ int swap(Memory *memory){
   }
   do{
     if(p->type == P){
-      fprintf(fp, "%d %c %d %d\n", p->id, p->label, p->size, p->duration);
+      fprintf(fp, "%d %c %d %ld\n", p->id, p->label, p->size, p->duration-(time(NULL) - p->initialTime));
     }
     p = p->next;
   }while(p != memory->first);
@@ -282,8 +282,10 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
       aux = aux->next;
     }while(aux != memory->first);
   }else{
-    printf("Não foi possível alocar memória para o processo: %c", process->label);
+    printf("\nNão foi possível alocar memória para o processo: %c\n", process->label);
+    sleep(3);
     system("clear");
+    idGeneretor--;
     free(process);
     return;
   }
@@ -336,12 +338,14 @@ int spaceVerify(Memory *memory, int processSize){
 }
 
 void garbageCollector(Memory *memory){
-  int finalTime = time(NULL);
+  int currentTime = time(NULL);
   MemorySpace *p;
   p = memory->first;
   do{
-    if(p->duration <= difftime(finalTime, p->initialTime) && p->type == P){
-      shutProcess(memory, p->id);
+    if(p->type == P){
+      if(p->duration + p->initialTime <= currentTime){
+        shutProcess(memory, p->id);
+      }
     }
     p = p->next;
   }while(p != memory->first);
@@ -463,29 +467,29 @@ void *showMemory(Memory *memory){
     p = memory->first;
     garbageCollector(memory);
 
-    printf("______________________________________\n");
-    printf("| ID | Processo | Tamanho | Endereço |\n");
-    printf("|____|__________|_________|__________|\n");
+    printf(" ________________________________________________________\n");
+    printf("| ID | Processo | Tamanho | Endereço | Tempo de Execução |\n");
+    printf("|____|__________|_________|__________|___________________|\n");
 
     do{
       if(p->type == P){
-        printf("|%3d |%9c |%8d |%9d |\n",p->id, p->label, p->size, p->startAt);
-        printf("|____|__________|_________|__________|\n");
+        printf("|%3d |%9c |%8d |%9d |%18ld |\n",p->id, p->label, p->size, p->startAt, time(NULL) - p->initialTime);
+        printf("|____|__________|_________|__________|___________________|\n");
       }
       if(p == p->next && p->type == H){
-        printf("|                                    |\n");
-        printf("|    NÃO HÁ PROCESSOS EM EXECUÇÃO    |\n" );
-        printf("|                                    |\n");
-        printf("|____________________________________|\n");
+        printf("|                                                        |\n");
+        printf("|              NÃO HÁ PROCESSOS EM EXECUÇÃO              |\n" );
+        printf("|                                                        |\n");
+        printf("|________________________________________________________|\n");
       }
       p = p->next;
     }while(p != memory->first);
 
 
-    printf("Memória Livre:  %5d Kbits\n", memory->free_space);
+    printf("\nMemória Livre:  %5d Kbits\n", memory->free_space);
     printf("Memória Ocupada:%5d Kbits\n", MEMORY_SIZE - memory->free_space);
     printf("Memória Total:  %5d Kbits\n", MEMORY_SIZE);
-    printf("______________________________________\n");
+    printf("________________________________________________________\n");
     printf("\nAperte Enter para continuar.\n");
     sleep(1);
     system("clear");
