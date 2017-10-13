@@ -104,7 +104,6 @@ int main() {
 }
 
 void initialize(Memory *memory){
-  int i;
   char resp;
   MemorySpace *hole  = (MemorySpace*) malloc(sizeof(MemorySpace));
   hole->type = H;
@@ -205,7 +204,7 @@ void readSwap(Memory *memory, FILE *fp){
 void initializeProcess(Memory *memory, int id, char label, int size, int duration){
   MemorySpace *process, *aux;
   aux = memory->first;
-  int i, comp;
+  int i;
   int startTime = time(NULL);
   garbageCollector(memory);
   process = (MemorySpace*) malloc(sizeof(MemorySpace));
@@ -220,7 +219,7 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
   if(spaceVerify(memory, process->size)){ // verifica se há espaço livre na memoria, suficiente para alicar o novo processo;
     i = findSpace(memory, process->size); // Verifica se há necessidade de compactar/organizar memoria
     if(i == -1){
-      comp = compactMemory(memory); //organiza procesos na memoria para alocar o novo processo;
+      compactMemory(memory); //organiza procesos na memoria para alocar o novo processo;
     }
     do{
       if(memory->first != NULL && aux->type == H){
@@ -339,8 +338,8 @@ MemorySpace *getProcess(Memory *memory, int id){
       if(p->id == id){
         return p;
       }
-      printf("getProcess\n" );
-      p = p->next;
+    printf("getProcess\n" );
+    p = p->next;
   }while(p != memory->first);
   return NULL;
 }
@@ -434,16 +433,19 @@ void callShowMemory(Memory *memory){
 
 void *closeThread(){
   getchar();
-while(closeThreads)
+while(closeThreads){
   if(getchar() == '\n'){
     closeThreads = 0;
     return NULL;
+  }else{
+    continue;
   }
+}
+  return NULL;
 }
 
 void *showMemory(Memory *memory){
   MemorySpace *p;
-  int i;
   pthread_t t2;
   if (pthread_create(&t2, NULL, (void*)closeThread, NULL)) {
    perror("pthread_create1");
