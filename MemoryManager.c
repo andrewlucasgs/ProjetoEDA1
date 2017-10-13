@@ -78,10 +78,10 @@ int main() {
   for(;;){
     system("clear");
     printf("\n");
-    printf(" %c 1 - Criar novo processo. \n", 254); // Cria novo processo, e insere ele na memoria;
-    printf(" %c 2 - Mostrar processos em execução. \n", 254); // Mostra todos processos em execucao;
-    printf(" %c 3 - Encerrar processo em execução. \n", 254); // Forca encerramento de processo, antes do tempo estabelecido;
-    printf(" %c 0 - Fechar \n", 175);
+    printf(">> 1 - Criar novo processo. \n"); // Cria novo processo, e insere ele na memoria;
+    printf(">> 2 - Mostrar processos em execução. \n"); // Mostra todos processos em execucao;
+    printf(">> 3 - Encerrar processo em execução. \n"); // Forca encerramento de processo, antes do tempo estabelecido;
+    printf(">> 0 - Fechar \n");
     scanf(" %d", &op);
     switch (op) {
       case 0: system("clear");
@@ -324,7 +324,6 @@ void garbageCollector(Memory *memory){
     if(p->duration <= difftime(finalTime, p->initialTime) && p->type == P){
       shutProcess(memory, p->id);
     }
-    printf("garbageCollector\n" );
     p = p->next;
   }while(p != memory->first);
   freeSpaceCounter(memory);
@@ -338,7 +337,6 @@ MemorySpace *getProcess(Memory *memory, int id){
       if(p->id == id){
         return p;
       }
-    printf("getProcess\n" );
     p = p->next;
   }while(p != memory->first);
   return NULL;
@@ -349,7 +347,6 @@ void mergeHole(Memory *memory, MemorySpace *p) {
   aux = p;
   while(p->prev->type == H && p != memory->first){ //Se o anterior for um buraco, o p passa a apontar para ele;
     p = p->prev;
-    printf("mergeHole1\n" );
   }
   aux = p->next;
   if (aux->type == P) {
@@ -361,7 +358,6 @@ void mergeHole(Memory *memory, MemorySpace *p) {
       p->next = aux->next;
       p->size += aux->size;
       if(aux == memory->last) memory->last = p;
-      printf("mergeHole2\n" );
       aux = p->next;
     }else if(aux->type == H && aux->next == p){
       p->next = p;
@@ -370,15 +366,10 @@ void mergeHole(Memory *memory, MemorySpace *p) {
         p->size += aux->size;
       }
       if(aux == memory->last) memory->last = p;
-      printf("mergeHole3\n" );
       aux = p->next;
     }else{
-      system("clear");
-      printf("Te acheu\n" );
-      sleep(4);
       return;
     }
-    printf("mergeHole4\n" );
   }while(aux->type != P && aux != p);
 }
 
@@ -396,7 +387,6 @@ void shutProcess(Memory *memory, int id){
     p->type = H;
     if(p->prev->type == H || p->next->type == H){
       mergeHole(memory, p);
-      printf("shutProcess\n" );
     }
     freeSpaceCounter(memory);
     return;
@@ -416,7 +406,6 @@ void freeSpaceCounter(Memory *memory){
     if(p->type == H){
     memory->free_space += p->size;
     }
-    printf("freeSpaceCounter\n" );
   p = p->next;
   }while(p != memory->first);
 }
