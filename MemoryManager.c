@@ -20,6 +20,7 @@
 #include<locale.h>
 #include<unistd.h>
 #include <pthread.h>
+#include<string.h>
 
 
 #define MEMORY_SIZE 10
@@ -68,7 +69,8 @@ int findSpace(Memory *memory, int size); // Verifica se e necessario compactar/o
 int compactMemory(Memory *memory); // compacta a memoria;
 void mergeHole(Memory *memory, MemorySpace *p); // Mescla os buracos vizinhos na memoria;
 void garbageCollector(Memory *memory); // verifica os processos que já se encerram;
-
+void logRegister(MemorySpace *p, int mode);
+void showLog(void);
 
 int main() {
   int op=-1;
@@ -81,6 +83,7 @@ int main() {
     printf(">> 1 - Criar novo processo. \n"); // Cria novo processo, e insere ele na memoria;
     printf(">> 2 - Mostrar processos em execução. \n"); // Mostra todos processos em execucao;
     printf(">> 3 - Encerrar processo em execução. \n"); // Forca encerramento de processo, antes do tempo estabelecido;
+    printf(">> 4 - Exibir registros do sistema. \n"); // Mostra o log do Sitema;
     printf(">> 0 - Fechar \n");
     scanf(" %d", &op);
     switch (op) {
@@ -95,6 +98,9 @@ int main() {
               break;
       case 3: system("clear");
               callShutProcess(memory);
+              break;
+      case 4: system("clear");
+              showLog();
               break;
       default: break;
     }
@@ -113,6 +119,7 @@ void initialize(Memory *memory){
   hole->prev = hole;
   memory->first = hole;
   memory->last = hole;
+  logRegister(NULL, 0);
   freeSpaceCounter(memory);
   FILE *fp  = fopen ("swap.txt", "r");
   if (fp != NULL) {
@@ -177,6 +184,7 @@ void shut(Memory *memory){
       }
   }/*fim-if-process_check*/
   if(confirma == 's' || confirma == 'S'){
+      logRegister(NULL, 3);
       exit(0);
   }
 }
@@ -270,12 +278,14 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
             process->next->size -= process->size;
             process->next->startAt = process->size + 1;
           }
+          logRegister(process, 1);
           return;
         } else if(aux->size == process->size){ //Insercao quando o espaço disponível for igual o tamanho do processo;
           aux->type = P;
           aux->label = label;
           aux->duration = duration;
           aux->initialTime = startTime;
+          logRegister(aux, 1);
           return;
           }
       }
@@ -322,7 +332,7 @@ int findSpace(Memory *memory, int size){
   MemorySpace *p;
   p = memory->first;
   do{
-    if(p->type == H || p->size >= size){
+    if(p->type == H && p->size >= size){
       return p->startAt;
     }
     p = p->next;
@@ -408,6 +418,7 @@ void shutProcess(Memory *memory, int id){
   p = getProcess(memory, id);
   if(p != NULL){
     p->type = H;
+    logRegister(p, 2);
     if(p->prev->type == H || p->next->type == H){
       mergeHole(memory, p);
     }
@@ -473,7 +484,7 @@ void *showMemory(Memory *memory){
 
     do{
       if(p->type == P){
-        printf("|%3d |%9c |%8d |%9d |%18ld |\n",p->id, p->label, p->size, p->startAt, time(NULL) - p->initialTime);
+        printf("|%3d |%9c |%8d |%9d |%17lds |\n",p->id, p->label, p->size, p->startAt, time(NULL) - p->initialTime);
         printf("|____|__________|_________|__________|___________________|\n");
       }
       if(p == p->next && p->type == H){
@@ -497,4 +508,52 @@ void *showMemory(Memory *memory){
   pthread_join(t2,NULL);
   closeThreads = 1;
   return NULL;
+}
+
+void logRegister(MemorySpace *p, int cod){
+  /*
+  cod 0: Sistema Iniciado
+  cod 1: Processo Criado
+  cod 2: Processo Encerrado
+  cod 3: Sistema Encerrado
+  */
+
+  time_t nowTime=time(NULL);
+  char *now=ctime(&nowTime);
+  now[strlen(now)-1]=0;        // remove \n
+  FILE *fp;
+  fp = fopen ("log.txt", "a");
+  if (fp == NULL) {
+     printf ("Houve um erro ao registrar log em disco.\n");
+     fclose (fp);
+     return;
+  }
+  switch (cod) {
+    case 0: fprintf(fp, "%s -> Sistema Iniciado\n",now);
+            break;
+    case 1: fprintf(fp, "%s -> Processo Criado: id: %d, label: %c, tamanho: %d, duração: %d\n",now, p->id, p->label, p->size, p->duration);
+            break;
+    case 2: fprintf(fp, "%s -> Processo Encerrado: id: %d, label: %c, tamanho: %d, duração: %d\n",now, p->id, p->label, p->size, p->duration);
+            break;
+    case 3: fprintf(fp, "%s -> Sistema Encerrado\n",now);
+            break;
+  }
+  fclose (fp);
+  return ;
+}
+void showLog(){
+  FILE *fp;
+  char line[100];
+  fp = fopen ("log.txt", "r");
+  if (fp == NULL) {
+     printf ("Houve um erro ao ler log em disco.\n");
+     fclose (fp);
+     return;
+  }
+  while( fgets(line, 100, fp)!=NULL ) puts(line);
+  fclose (fp);
+  printf("\nAperte Enter para continuar.");
+  getchar();
+  getchar();
+  return;
 }
