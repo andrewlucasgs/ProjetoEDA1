@@ -268,8 +268,13 @@ Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desd
 </div>
 ***
 
+<<<<<<< HEAD
 ### Nivaldo Pereira Lopo Junior 12/0039460
 #### Atividades:
+=======
+##### Nivaldo Pereira Lopo Junior 12/0039460
+###### Atividades:
+>>>>>>> 80f69f533030030748263bdc27a86e9c68fc66b1
 - Implementação
 - Escrita do relatório
 
@@ -281,3 +286,6 @@ Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desd
 
 #### Dificuldades:
 - Diversas tentativas de realizar a compactação da memoria, primeiramente ao tentar utilizar pilhas o programa estava encerrando devido a falha por segmentação, após repetidamente tentar resolver este problema (utilizando outras variáveis, vetores e outras maneiras de lidar com a memoria) não foi encontrada solução com pilha para a compactação. Foi então tentado realizar a compactação ao tentar religar os processos ainda ativos retirando a conexão dos mesmos com buracos, ainda assim não foi possível. Portanto a compactação foi realizada utilizando um arquivo temporário.
+
+###### Análise Pessoal do projeto:
+- A realização desse projeto foi interessante para mim por ser o primeiro projeto de software que realizei em grupo na universidade, uma vez estou realizando essa matéria como optativa na minha grade curricular (curso engenharia aeroespacial). Por estar ocupado com outras matérias e com meu trabalho de conclusão de curso, adiei o inicio deste trabalho e acabei tendo algumas dificuldades, com ajuda de colegas que já cursaram a disciplina e do membro do grupo Andrew consegui entender bem o problema a ser trabalhado e como realizar a implementação das funções que trabalhei no grupo. Em geral, a experiência de realizar esse trabalho e de cursar essa disciplina como um todo tem me ajudado a me profissionalizar e me capacitar mais em desenvolvimento de software, conhecimento que tenho também aplicado em meu TCC, além de um conhecimento mais avançado da linguagem C.
