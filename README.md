@@ -10,13 +10,14 @@
 ---
 ## Relatório de Projeto
 ### Índice
-[1. Introdução](#1-Introdução)  
-[2. Objetivo do projeto](#1-objetivo-do-projeto)  
-[3. Requisitos do projeto](#2-requisitos-do-projeto)  
-[4. Falhas do projeto](#3-falhas-do-projeto)  
-[5. Problemas conhecidos do projeto](#5-problemas-conhecidos-do-projeto)   
-[6. Melhorias do projeto](#6-melhorias-do-projeto)   
-[7. Imagens do Sistema](#7-imagens-do-sistema)   
+1. Introdução  
+2. Objetivo do projeto    
+3. Requisitos do projeto   
+4. Falhas do projeto  
+5. Problemas conhecidos do projeto  
+6. Melhorias do projeto  
+7. Imagens do Sistema   
+Relatorios individuais  
 
 ### 1. Introdução
 Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a memória, manipulando espaços na memória, alguns com processos, outros livres. Os processos serão executados por um período de tempo gerado pseudo-randomicamente pelo sistema e a inserção de um novo processo na memória será feita utilizando o método *First-Fit*, que utiliza a primeira lacuna que encontrar com tamanho suficiente para alocar o processo, esse método é o que possui melhor performance em comparação com os outros métodos.
@@ -48,7 +49,7 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 #### 4.1 Estruturas de dados
 <div style="text-align: justify">
 Para o desenvolvimento do simulador, foi utilizada uma lista circular duplamente duplamente encadeada com cabeçalho, para gerenciar a memória.<br>
-O cabeçalho é composto por dois apontadores, um apontando para o primeiro elemento no primeiro endereço da memoria, seja um processo ou um buraco. E outro apontando para o útimo elemento da lista, E por fim um inteiro para registrar a soma de todos os espaçoes livres.<br><br>
+O cabeçalho é composto por dois apontadores, um apontando para o primeiro elemento no primeiro endereço da memoria, seja um processo ou um buraco. E outro apontando para o útimo elemento da lista, E por fim um inteiro para registrar a soma de todos os espaçoes livres.<br>
 Na lista, cada elemento possui:  
 </div>
 
@@ -247,17 +248,19 @@ Tela de exibição de processos (processo A encerrado)
 - Consegui identificar onde poderia ser utilizada uma estrutura de pilha, mas não consegui implementar a sua utilização.
 
 #### As funções mais difíceis de implementar foram:
-- initializeProcess(inicializar e alocar um processo):
+- **initializeProcess(inicializar e alocar um processo):**
   Tive dificuldades em implemntar uma função que abrangesse todos os casos de inserção de um novo processo na lista, mas após alguns estudos de como é feita a alocação de um novo processo na memória, consegui entender a lógica, e tornou a implementação mais fácil.
-- compactMemory (compactar memória):
+- **compactMemory (compactar memória):**
   Tentei realizar esse metódo utilizando a estrutura de pilhas, sem sucesso. Mas segui a mesma lógica de pilhas, implementando em arquivo, mesmo sabendo que não é um processo eficiente;
-- showMemory (mostrar informações):
+- **showMemory (mostrar informações):**  
   No inicio foi fácil, porém depois que decidimos implementar novas funções, essa função se tornou mais complexa, e foi necessário investir mais tempo no estudo de sua implementação e na implementação de fato.
 
 #### Análise Pessoal do projeto
+<div style="text-align: justify">
 No início, não pensei que seria muito complicado elaborar esse sistema, e por estar muito ocupado com outras disciplinas, adiei o início da implementação desse projeto. Porém quando comecei a estudar como implementaria, percebi que não seria fácil. E comecei uma maratona de estudo e desenvolvimento do sistema, assim consegui aprender bastante sobre gerenciamento de memória, mais a respeito da linguagem C, como uso de threads, bibliotecas time.h e outras funções que eu não conhecia.<br>
 Com a chegada do prazo de entrega, o projeto percebi que não teria tempo suficiente para termina-lo, então decidimos, atrasar, porém entregar um projeto bem feito para compensar o atraso, implementando novas pequenas funcionalidades e deixando o visual mais bonito.<br>
 Por fim, gostei bastante da proposta do projeto, consegui aprender bastante informação nova, e úteis para aplicar em projetos futuros.
+</div>
 ***
 
 ### Max Henrique Barbosa 16/0047013
@@ -268,13 +271,8 @@ Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desd
 </div>
 ***
 
-<<<<<<< HEAD
 ### Nivaldo Pereira Lopo Junior 12/0039460
 #### Atividades:
-=======
-##### Nivaldo Pereira Lopo Junior 12/0039460
-###### Atividades:
->>>>>>> 80f69f533030030748263bdc27a86e9c68fc66b1
 - Implementação
 - Escrita do relatório
 
@@ -287,5 +285,5 @@ Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desd
 #### Dificuldades:
 - Diversas tentativas de realizar a compactação da memoria, primeiramente ao tentar utilizar pilhas o programa estava encerrando devido a falha por segmentação, após repetidamente tentar resolver este problema (utilizando outras variáveis, vetores e outras maneiras de lidar com a memoria) não foi encontrada solução com pilha para a compactação. Foi então tentado realizar a compactação ao tentar religar os processos ainda ativos retirando a conexão dos mesmos com buracos, ainda assim não foi possível. Portanto a compactação foi realizada utilizando um arquivo temporário.
 
-###### Análise Pessoal do projeto:
+#### Análise Pessoal do projeto:
 - A realização desse projeto foi interessante para mim por ser o primeiro projeto de software que realizei em grupo na universidade, uma vez estou realizando essa matéria como optativa na minha grade curricular (curso engenharia aeroespacial). Por estar ocupado com outras matérias e com meu trabalho de conclusão de curso, adiei o inicio deste trabalho e acabei tendo algumas dificuldades, com ajuda de colegas que já cursaram a disciplina e do membro do grupo Andrew consegui entender bem o problema a ser trabalhado e como realizar a implementação das funções que trabalhei no grupo. Em geral, a experiência de realizar esse trabalho e de cursar essa disciplina como um todo tem me ajudado a me profissionalizar e me capacitar mais em desenvolvimento de software, conhecimento que tenho também aplicado em meu TCC, além de um conhecimento mais avançado da linguagem C.
