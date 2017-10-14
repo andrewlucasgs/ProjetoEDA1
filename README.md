@@ -68,37 +68,96 @@ O tipo de estrutura de dados mais recomendado para gerenciamento de memória é 
 
 
 </div>
+
 | Biblioteca | Descrição | Utilidade |
-|:-:|:-:|:-:|
-| stdio | Possui definições de subrotinas relativas às operações de entrada/saída, como leitura de dados digitados no teclado e exibição de informações na tela do programa de computador| P - processo ou H - buraco|
-| stdlib | id | int |
-| time| label | char |
-| locale | size | int |
-| unistd| startAt | int |
-| pthread| initialTime| int |
-| string| duration | int |
+|:-:|:-|:-|
+| stdio | Possui definições de subrotinas de entrada/saída de dados.| Utilizada para ler e mostrar informções.|
+| stdlib | biblioteca de propósito geral padrão | Alocação de memória, gerar um tempo aleatório para cada processo e limpar a tela |
+| time| Bibiloteaca dedicada manipulação de datas e horários | Controle de tempo dos processos |
+| locale | Define configurações específicas da localização | Mostrar caracteres especiais. |
+| unistd| Permite acesso a ficheiros e diretórios | Função sleep; |
+| pthread| Biblioteca para manipulação de threads| Utilização de thread para mostrar display e atualização |
+| string| Manipulação de string | Manipular tempo em formato de string |
 
 ##### 3.3 Funções
-<div style="text-align: justify">
-Para o desenvolvimento do simulador, foi utilizada uma lista circular duplamente duplamente encadeada com cabeçalho, para gerenciar a memória.<br>
-O cabeçalho é composto por dois apontadores, um apontando para o primeiro elemento no primeiro endereço da memoria, seja um processo ou um buraco. E outro apontando para o útimo elemento da lista, E por fim um inteiro para registrar a soma de todos os espaçoes livres.<br>
-Na lista, cada elemento possui um tipo (P - processo ou H - buraco),  
+##### void initialize(Memory* memory)
+<div style="text-align: justify"> Inicializa a lista encadeada, criando o primeiro elemento, um espaço vazio do tamanho da memória definida. Registra a inicialização do sistema em no log. Caso exista o arquivo de swap, pergunta ao usuário se ele deseja recuperar os processos, caso sim, ele realiza a inicialização dos processos a partir do arquivo.
+
 </div>
+<br>
+
+##### void shut(Memory * memory)
+<div style="text-align: justify">
+Encerra o programa. Confirma se o usuário quer realmente sair, caso não retorna ao programa, caso sim, se não houver processos em execução ele registra o encerramento no log, e termina. Caso haja processo em execução ele pergunta se deseja guardar o processo em disco. Se sim ele realiza o swap, se não ele registra e sai do sistema.
+</div>
+<br>
+
+##### int swap(Memory * memory)
+<div style="text-align: justify">
+Grava processos em execução em disco, chama o garbageCollector para verificar se há processos encerrados na memória, grava em arquivo o id, a label, o tamanho, e a duração com o desconto do tempo já executado de cada processo ativo na memória.
+</div>
+
+##### void readSwap(Memory * memory, FILE * fp)
+<div style="text-align: justify">
+Ler dados processos gravados em disco, e os inicializa na memória.<br>
+Obs: o arquivo é aberto na função shut, para verificar sua existência.
+</div>
+
+##### void initializeProcess(Memory * memory, int id, char label, int size, int duration, int initTime, int mode)
+<div style="text-align: justify">
+Inicializa um processo, alocando-o na memória, através do método *First-Fit*. Recebe como parâmetros os dados do processo, e o mode para verificar qual função está chamando a inicialização.<br>
+Verifica se há processos encerrados na memória, aloca espaço para o novo processo, define as suas informações. Verifica se há espaço na memória maior ou igual a do processo, se sim verifica se é continuo ou não, se não, chama o procedimento compactMemory, caso não seja necessário compactar a memória, a lista é pecorrida e até encontrar o espaço o qual possa alocar o processo. Ao final da alocação, registra em log o processo criado.<br>
+Se não há espaço para o processo, uma mensagem é exibida informando o usuário.
+</div>
+
+##### void newProcess(Memory * memory)
+<div style="text-align: justify">
+Recebe os parâmetros do usuário para inicializar o processo. Gera a duração do processo apartir de um tempo aleatório entre 10s e 180s, e o id apartir de uma variável global(idGeneretor), que é incrementado em um sempre que um processo é executado. Chama a função de inicialização de processo, passando além dos dados do processo, o mode 0
+</div>
+
+##### int spaceVerify(Memory * memory, int processSize)
+<div style="text-align: justify">
+
+</div>
+
+- void * showMemory()
+- void * closeThread(void)
+- void callShowMemory(Memory * memory)
+- MemorySpace * getProcess(Memory * memory, int id)
+- void callShutProcess(Memory * memory)
+- void shutProcess(Memory * memory, int id)
+- void freeSpaceCounter(Memory * memory)
+- int findSpace(Memory * memory, int size)
+- void compactMemory(Memory * memory, MemorySpace * process)
+- void mergeHole(Memory * memory, MemorySpace * p)
+- void garbageCollector(Memory * memory)
+- void logRegister(MemorySpace * p, int mode)
+- void showLog(void);
+
 
 #### 4. Melhorias do projeto
 
 ## Relatórios individuais
 
-#### Andrew Lucas Guedes de Souza 16/0023921
+##### Andrew Lucas Guedes de Souza 16/0023921
 ###### Atividades:
--
--
--
+- Implementação Geral  
+- Escrever relatório
+- Organizar estrutura do programa
+- Gerenciar o projeto
+
 ###### Estudos:
 - Uso de thread para realizar a verificação e encerramento dos processos, que concluiram o tempo de execução.
 - Utilização da bilioteca time.h e como ela funciona, para implementar a verificação do tempo de execução de um processo;
--
+
 ###### Dificuldades:
 - Implementar um método eficiente de compactação da memória
+- Atualização de tela.
 -
--
+
+
+
+#### Max Henrique Barbosa 16/0047013
+Ingressei no grupo dia 10 onde até o primeiro momento havia apenas uma ideia das possíveis funções para implementação do que foi solicitado. Acredito pessoalmente não ter sido de grande auxílio devido a algumas limitações da minha parte, porém tentei auxiliar com alguma coisa que estivesse ao meu alcance. Para a realização do trabalho, procuramos formas de entender como uma memória se comporta para elaborar uma abordagem que fosse possível de sanar o problema.<br>
+Definimos formas de criar, encerrar e mostrar os processos em execução. Das dificuldades houve uma certa complicação com o tempo e com as possíveis ferramentas que poderíamos utilizar para resolver coisas de alguns requisitos como, a exibição do tempo de cada processo. Além de procurar outras soluções que viessem de encontro com coisas que eram de nosso conhecimento. Houve ao longo do desenvolvimento pesquisas dos membros e solicitação de auxílio com outros alunos que estavam um pouco mais a frente do curso que entendiam melhor do assunto.<br>
+Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desde tempo e parâmetros a uma possibilidade de poder gravar dados em arquivo.
