@@ -14,7 +14,7 @@
 [4. Melhorias do projeto](#4-melhorias-do-projeto)  
 
 #### 1. Introdução do projeto
-Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a memória, manipulando espaços na memória, alguns com processos, outros livres. Os processos serão executados por um período de tempo definido pelo usuário, e inserção de um novo processo na memória, será feita utilizando o método *First-Fit*, que utiliza a primeira lacuna que encontrar com tamanho suficiente para alocar o processo, esse método é o que possui melhor performance em comparação com os outros métodos.
+Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a memória, manipulando espaços na memória, alguns com processos, outros livres. Os processos serão executados por um período de tempo gerado pseudo-randomicamente pelo sistema e a inserção de um novo processo na memória será feita utilizando o método *First-Fit*, que utiliza a primeira lacuna que encontrar com tamanho suficiente para alocar o processo, esse método é o que possui melhor performance em comparação com os outros métodos.
 
 
 #### 1. Objetivo do projeto
@@ -29,7 +29,7 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 
 - [x] O programa deve tentar encontrar uma forma de reorganizar os processos na memória de modo a acomodar o novo processo. Se depois dessa tentativa não houver espaço disponível, deve-se imprimir a seguinte mensagem: "Não foi possível alocar memória para o processo: [label do processo]".
 
-- [ ] O tempo de execução de um processo é aleatório (não previsível). Portanto, caberá ao aluno definir como ele vai simular esse tempo de execução e o término de um processo. Sugere-se ainda que o programa imprima o registro de entrada e saída de processos na memória.
+- [x] O tempo de execução de um processo é aleatório (não previsível). Portanto, caberá ao aluno definir como ele vai simular esse tempo de execução e o término de um processo. Sugere-se ainda que o programa imprima o registro de entrada e saída de processos na memória.
 
 - [x] O programa deve ser capaz de imprimir, a qualquer momento, quais posições de memória estão ocupadas (P) e quais estão livres (H). Imagine que a memória é um grande vetor onde cada posição armazena um Kbyte.
 
@@ -37,7 +37,7 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 
 - [x]  O programa deve oferecer a opção de gravar os dados em arquivo. E quando o programa for iniciado, deve ser possível ler as informações desse arquivo para continuar a execução da simulação da memória.
 
-- [ ] A gerência de espaços de processo (P) e buracos (H) na memória deve ser feito por meio de uma lista circular duplamente encadeada, com cabeçalho. Nesse caso, o aluno deve desenhar o nó considerando pelo menos: tipo de nó (P ou H), posição de memória inicial, tamanho da área de memória livre ou ocupada.
+- [x] A gerência de espaços de processo (P) e buracos (H) na memória deve ser feito por meio de uma lista circular duplamente encadeada, com cabeçalho. Nesse caso, o aluno deve desenhar o nó considerando pelo menos: tipo de nó (P ou H), posição de memória inicial, tamanho da área de memória livre ou ocupada.
 
 #### 3. Metodologia
 ##### 3.1 Estruturas de dados
@@ -162,15 +162,24 @@ Pecorre a lista, verificando se há algum espaço livre continuo maior ou igual 
 ##### void compactMemory(Memory * memory, MemorySpace * process)
 <div style="text-align: justify">
 Realiza a compactação da memória, quando houver espaço para alocar o novo processo, porém não continuo.<br>
-A compactação é feita copiando todos processos em execução para um arquivo temporário e depois
+A compactação é feita copiando todos processos em execução para um arquivo temporário e depois repassando os processos para a lista seguido da exclusão do arquivo.
 </div>
 ##### void mergeHole(Memory * memory, MemorySpace * p)
 <div style="text-align: justify">
 Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a função shutProcess.
 </div>
 ##### void garbageCollector(Memory * memory)
+<div style="text-align: justify">
+Através de um loop do-while analisa todos os processos e verifica se algum deles ja foi finalizado, comparando seu tempo inicial e sua duração. Ao final utiliza a função freeSpaceCounter para atualizar a memoria disponível.
+</div>
 ##### void logRegister(MemorySpace * p, int mode)
+<div style="text-align: justify">
+Salva em um arquivo texto o log de atividades do gerenciador de memoria, informando o inicio e encerramento do sistema além da criação e encerramento de processos.
+</div>
 ##### void showLog(void);
+<div style="text-align: justify">
+Imprime na tela o log de atividades do sistema, realizado pela função logRegister
+</div>
 
 
 #### 4. Problemas conhecidos do projeto
@@ -178,6 +187,7 @@ Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a 
 
 #### 5. Melhorias do projeto
 - Exibir o a tabela de processos em execução na mesma tela do menu;
+- Desenvolver uma melhor interface gráfica.
 
 
 ## Relatórios individuais
@@ -196,8 +206,6 @@ Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a 
 ###### Dificuldades:
 - Implementar um método eficiente de compactação da memória
 - Atualização de tela.
--
-
 
 
 #### Max Henrique Barbosa 16/0047013
@@ -206,3 +214,18 @@ Ingressei no grupo dia 10 onde até o primeiro momento havia apenas uma ideia da
 Definimos formas de criar, encerrar e mostrar os processos em execução. Das dificuldades houve uma certa complicação com o tempo e com as possíveis ferramentas que poderíamos utilizar para resolver coisas de alguns requisitos como, a exibição do tempo de cada processo. Além de procurar outras soluções que viessem de encontro com coisas que eram de nosso conhecimento. Houve ao longo do desenvolvimento pesquisas dos membros e solicitação de auxílio com outros alunos que estavam um pouco mais a frente do curso que entendiam melhor do assunto.<br>
 Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desde tempo e parâmetros a uma possibilidade de poder gravar dados em arquivo.
 </div>
+
+
+##### Nivaldo Pereira Lopo Junior 12/0039460
+###### Atividades:
+- Implementação
+- Escrita do relatório
+
+###### Estudos:
+- Estudo de maneiras de realizar a compactação de processos.
+- Utilização da biblioteca time.h, para implementar a geração da semente para geração de numero pseudorrandômico.
+- Estudo da função rand(); para geração pseudorrandômica da duração de um novo processo.
+- Estudos relacionado a causas de falhas por segmentação.
+
+###### Dificuldades:
+- Diversas tentativas de realizar a compactação da memoria, primeiramente ao tentar utilizar pilhas o programa estava encerrando devido a falha por segmentação, após repetidamente tentar resolver este problema (utilizando outras variáveis, vetores e outras maneiras de lidar com a memoria) não foi encontrada solução com pilha para a compactação. Foi então tentado realizar a compactação ao tentar religar os processos ainda ativos retirando a conexão dos mesmos com buracos, ainda assim não foi possível. Portanto a compactação foi realizada utilizando um arquivo temporário.
