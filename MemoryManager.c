@@ -23,7 +23,7 @@
 #include<string.h>
 
 
-#define MEMORY_SIZE 56
+#define MEMORY_SIZE 100
 #define P 1
 #define H 0
 
@@ -488,7 +488,7 @@ while(closeThreads){
 
 void *showMemory(Memory *memory){
   MemorySpace *p;
-  int i;
+  int i, eq;;
   pthread_t t2;
   if (pthread_create(&t2, NULL, (void*)closeThread, NULL)) {
    perror("pthread_create1");
@@ -519,12 +519,13 @@ void *showMemory(Memory *memory){
     p = memory->first;
     printf("| Uso da Memória: %3d%%                                   |\n|",(100*(MEMORY_SIZE - memory->free_space))/MEMORY_SIZE);
     do{
+      eq = (int) (56*p->size)/MEMORY_SIZE;
       if(p->type == P){
-        for(i=0;i<p->size;i++)
+        for(i=0;i<=eq;i++)
           printf("%c", p->label);
       }
       else if(p->type == H){
-        for(i=0;i<p->size;i++)
+        for(i=0;i<eq;i++)
           printf("-");
       }
         p = p->next;
