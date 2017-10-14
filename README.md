@@ -117,25 +117,67 @@ Recebe os parâmetros do usuário para inicializar o processo. Gera a duração 
 
 ##### int spaceVerify(Memory * memory, int processSize)
 <div style="text-align: justify">
-
+Verifica se o espaço livre na memória é mairo que o tamnho do processo, retornando 1 caso seja verdade e 0 caso não.
 </div>
 
-- void * showMemory()
-- void * closeThread(void)
-- void callShowMemory(Memory * memory)
-- MemorySpace * getProcess(Memory * memory, int id)
-- void callShutProcess(Memory * memory)
-- void shutProcess(Memory * memory, int id)
-- void freeSpaceCounter(Memory * memory)
-- int findSpace(Memory * memory, int size)
-- void compactMemory(Memory * memory, MemorySpace * process)
-- void mergeHole(Memory * memory, MemorySpace * p)
-- void garbageCollector(Memory * memory)
-- void logRegister(MemorySpace * p, int mode)
-- void showLog(void);
+##### void * showMemory()
+<div style="text-align: justify">
+Execultada em uma thread, a função mostra dados da memória na tela. Exibe quais processos em execução, suas informações como ID, label, tamanho, endereço e tempo de execução em segundos. Caso não houver processos em execução, exibe que não há processos em execução.<br>
+Mostra a porcentagem de uso da memória, e como os processos estam alocados nela. além de dados como memória livre, ocupada e total.
+A tela é atualizada a cada segundo, enquanto o usuario não apertar Enter para voltar ao menu.
+</div>
+
+##### void * closeThread(void)
+<div style="text-align: justify">
+Execultada em uma thread, espera pela entrada do usuário até que ele aperte a tecla enter.
+</div>
 
 
-#### 4. Melhorias do projeto
+##### void callShowMemory(Memory * memory)
+<div style="text-align: justify">
+Cria a thread em que a função showMemory irá ser execultada.
+</div>
+##### MemorySpace * getProcess(Memory * memory, int id)
+<div style="text-align: justify">
+Percorre a lista em busca de um processo com o id igual ao do parâmetro, se encontrar, retorna o processo, se não retorna nulo.
+</div>
+
+##### void callShutProcess(Memory * memory)
+<div style="text-align: justify">
+Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a função shutProcess.
+</div>
+##### void shutProcess(Memory * memory, int id)
+<div style="text-align: justify">
+Força encerramento do processo. Através do id passado como parâmetro, muda o tipo do processo para buraco, e registra o encerramento no log. Se algum dos espaços vizinhos também for um buraco chama a função que mescla dois buracos em um só.
+</div>
+##### void freeSpaceCounter(Memory * memory)
+<div style="text-align: justify">
+Soma todos os tamanhos dos buracos da memória e atribui ao atributo free_space, no Cabecalho da lista.
+</div>
+##### int findSpace(Memory * memory, int size)
+<div style="text-align: justify">
+Pecorre a lista, verificando se há algum espaço livre continuo maior ou igual ao tamanho do processo, se sim retorna o endereço do espaço, se não retorna -1.
+</div>
+##### void compactMemory(Memory * memory, MemorySpace * process)
+<div style="text-align: justify">
+Realiza a compactação da memória, quando houver espaço para alocar o novo processo, porém não continuo.<br>
+A compactação é feita copiando todos processos em execução para um arquivo temporário e depois
+</div>
+##### void mergeHole(Memory * memory, MemorySpace * p)
+<div style="text-align: justify">
+Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a função shutProcess.
+</div>
+##### void garbageCollector(Memory * memory)
+##### void logRegister(MemorySpace * p, int mode)
+##### void showLog(void);
+
+
+#### 4. Problemas conhecidos do projeto
+- A barra de exebição dos processos na memória, eventualmente fica desalinhada da tabela;
+
+#### 5. Melhorias do projeto
+- Exibir o a tabela de processos em execução na mesma tela do menu;
+
 
 ## Relatórios individuais
 
