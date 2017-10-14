@@ -86,6 +86,7 @@ int main() {
     printf("|   >>> 2 - Mostrar processos em execução                |\n"); // Mostra todos processos em execucao;
     printf("|   >>> 3 - Encerrar processo em execução                |\n"); // Forca encerramento de processo, antes do tempo estabelecido;
     printf("|   >>> 4 - Exibir registros do sistema                  |\n"); // Mostra o log do Sitema;
+    printf("|   >>> 5 - Sobre o sitema                               |\n");
     printf("|   >>> 0 - Fechar                                       |\n");
     printf("|________________________________________________________|\n");
     scanf(" %d", &op);
@@ -104,6 +105,30 @@ int main() {
               break;
       case 4: system("clear");
               showLog();
+              break;
+      case 5: system("clear");
+              printf("\n");
+              printf("|                 GERENCIADOR DE MEMÓRIA                 |\n" );
+              printf("|________________________________________________________|\n");
+              printf("|                                                        |\n");
+              printf("|   TRABALHO P/ DISCIPLINA DE ESTRUTURA DE DADOS E       |\n"); // Cria novo processo, e insere ele na memoria;
+              printf("|                                       ALGORITMOS       |\n"); // Mostra todos processos em execucao;
+              printf("|                                                        |\n");
+              printf("|   ANDREW LUCAS GUEDES DE SOUZA - 16/0023921            |\n"); // Forca encerramento de processo, antes do tempo estabelecido;
+              printf("|   NIVALDO PEREIRA LOPO JUNIOR  - 12/0039460            |\n"); // Mostra o log do Sitema;
+              printf("|   MAX HENRIQUE BARBOSA         - 16/0047013            |\n");
+              printf("|________________________________________________________|\n");
+              printf("\n|  >> Aperte Enter para voltar.");
+              getchar();
+              /*                             Andrew Lucas Guedes de Souza*/
+              /*                                     Matrícula: 160023921*/
+              /*---------------------------------------------------------*/
+              /*                              Nivaldo Pereira Lopo Junior*/
+              /*                                     Matrícula: 120039460*/
+              /*---------------------------------------------------------*/
+              /*                                     Max Henrique Barbosa*/
+              /*                                     Matrícula: 160047013*/
+              getchar();
               break;
       default: break;
     }
