@@ -8,19 +8,20 @@
 ---
 ## Relatório de Projeto
 #### Índice
-[1. Objetivo do projeto](#1-objetivo-do-projeto)  
-[2. Requisitos do projeto](#2-requisitos-do-projeto)  
-[3. Falhas do projeto](#3-falhas-do-projeto)  
-[4. Melhorias do projeto](#4-melhorias-do-projeto)  
+[1. Introdução](#1-Introdução)  
+[2. Objetivo do projeto](#1-objetivo-do-projeto)  
+[3. Requisitos do projeto](#2-requisitos-do-projeto)  
+[4. Falhas do projeto](#3-falhas-do-projeto)  
+[5. Melhorias do projeto](#4-melhorias-do-projeto)  
 
-#### 1. Introdução do projeto
+#### 1. Introdução
 Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a memória, manipulando espaços na memória, alguns com processos, outros livres. Os processos serão executados por um período de tempo gerado pseudo-randomicamente pelo sistema e a inserção de um novo processo na memória será feita utilizando o método *First-Fit*, que utiliza a primeira lacuna que encontrar com tamanho suficiente para alocar o processo, esse método é o que possui melhor performance em comparação com os outros métodos.
 
 
-#### 1. Objetivo do projeto
+#### 2. Objetivo do projeto
 <p> O projeto visa o desenvolvimento de um simulador de gerenciamento de memória em sistemas operacionais, utilizando a linguagem C. </p>  
 
-#### 2. Requisitos do projeto
+#### 3. Requisitos do projeto
 - [x] Os processos devem ter como parâmetros o seu tamanho (em Kbytes) e o tempo de execução (em segundos).
 
 - [x] Os processos devem ser alocados na memória de acordo com o seu tamanho e devem ter um identificador (label).
@@ -39,8 +40,8 @@ Um gerenciador de memória de sistemas operacionais, é utilizado para gerir a m
 
 - [x] A gerência de espaços de processo (P) e buracos (H) na memória deve ser feito por meio de uma lista circular duplamente encadeada, com cabeçalho. Nesse caso, o aluno deve desenhar o nó considerando pelo menos: tipo de nó (P ou H), posição de memória inicial, tamanho da área de memória livre ou ocupada.
 
-#### 3. Metodologia
-##### 3.1 Estruturas de dados
+#### 4. Metodologia
+##### 4.1 Estruturas de dados
 <div style="text-align: justify">
 Para o desenvolvimento do simulador, foi utilizada uma lista circular duplamente duplamente encadeada com cabeçalho, para gerenciar a memória.<br>
 O cabeçalho é composto por dois apontadores, um apontando para o primeiro elemento no primeiro endereço da memoria, seja um processo ou um buraco. E outro apontando para o útimo elemento da lista, E por fim um inteiro para registrar a soma de todos os espaçoes livres.<br><br>
@@ -64,7 +65,7 @@ O tipo de estrutura de dados mais recomendado para gerenciamento de memória é 
 </div>
 
 
-##### 3.2 Bibliotecas
+##### 4.2 Bibliotecas
 <div style="text-align: justify">
 
 
@@ -80,7 +81,7 @@ O tipo de estrutura de dados mais recomendado para gerenciamento de memória é 
 | pthread| Biblioteca para manipulação de threads| Utilização de thread para mostrar display e atualização |
 | string| Manipulação de string | Manipular tempo em formato de string |
 
-##### 3.3 Funções
+##### 4.3 Funções
 ##### void initialize(Memory* memory)
 <div style="text-align: justify"> Inicializa a lista encadeada, criando o primeiro elemento, um espaço vazio do tamanho da memória definida. Registra a inicialização do sistema em no log. Caso exista o arquivo de swap, pergunta ao usuário se ele deseja recuperar os processos, caso sim, ele realiza a inicialização dos processos a partir do arquivo.
 
@@ -182,10 +183,10 @@ Imprime na tela o log de atividades do sistema, realizado pela função logRegis
 </div>
 
 
-#### 4. Problemas conhecidos do projeto
+#### 5. Problemas conhecidos do projeto
 - A barra de exebição dos processos na memória, eventualmente fica desalinhada da tabela;
 
-#### 5. Melhorias do projeto
+#### 6. Melhorias do projeto
 - Exibir o a tabela de processos em execução na mesma tela do menu;
 - Desenvolver uma melhor interface gráfica.
 
