@@ -23,12 +23,13 @@
 #include<string.h>
 
 
-#define MEMORY_SIZE 10
+#define MEMORY_SIZE 56
 #define P 1
 #define H 0
 
 int closeThreads = 1;
 int idGeneretor = 1;
+int keepId = 0;
 
 typedef struct MemoryList{
   int type; // P -> processo; H -> buraco;
@@ -55,7 +56,7 @@ void initialize(Memory *memory); // Inicializa Lista;
 void shut(Memory *memory); // Chama encerramento do programa;
 int swap(Memory *memory); // Grava dados da memoria em disco;
 void readSwap(Memory *memory, FILE *fp); // Realiza leitura da memoria gravada em disco caso exista;
-void initializeProcess(Memory *memory, int id, char label, int size, int duration); // Cria novo processo e o aloca na memoria, se possivel;
+void initializeProcess(Memory *memory, int id, char label, int size, int duration, int initTime, int mode); // Cria novo processo e o aloca na memoria, se possivel;
 void newProcess(Memory *memory); // Recebe parametros de criacao de um processo;
 int spaceVerify(Memory *memory, int processSize); // Verifica se ha espaco suficiente para alocar processo;
 void *showMemory(); // Imprime estado atual da memoria na tela;
@@ -66,7 +67,7 @@ void callShutProcess(Memory *memory); // Chama e força encerramento do processo
 void shutProcess(Memory *memory, int id); // Encerra processo
 void freeSpaceCounter(Memory *memory); // Retorna a quantidade de espaco livre;
 int findSpace(Memory *memory, int size); // Verifica se e necessario compactar/oraganizar a memoria
-int compactMemory(Memory *memory); // compacta a memoria;
+void compactMemory(Memory *memory, MemorySpace *process); // compacta a memoria;
 void mergeHole(Memory *memory, MemorySpace *p); // Mescla os buracos vizinhos na memoria;
 void garbageCollector(Memory *memory); // verifica os processos que já se encerram;
 void logRegister(MemorySpace *p, int mode);
@@ -112,25 +113,25 @@ int main() {
 void initialize(Memory *memory){
   char resp;
   MemorySpace *hole  = (MemorySpace*) malloc(sizeof(MemorySpace));
-  hole->type = H;
-  hole->size = MEMORY_SIZE;
-  hole->startAt = 0;
-  hole->next = hole;
-  hole->prev = hole;
-  memory->first = hole;
-  memory->last = hole;
-  logRegister(NULL, 0);
-  freeSpaceCounter(memory);
-  FILE *fp  = fopen ("swap.txt", "r");
+  hole->type = H;           //
+  hole->startAt = 0;        // Criando espaco vazio do tamanho da memória
+  hole->size = MEMORY_SIZE; //
+  hole->next = hole;        //
+  hole->prev = hole;        // Aponta para ele mesmo
+  memory->first = hole;     //
+  memory->last = hole;      // Como e unico, ele e o primeiro e o ultimo
+  logRegister(NULL, 0);     // Registra inicializacao no log
+  freeSpaceCounter(memory); // Verifica espaco vazio e atribui a free_space
+  FILE *fp  = fopen ("swap", "r");  // Verifica se há arquivo de swap
   if (fp != NULL) {
      printf ("Deseja recuperar os processos salvos em disco?[s/n]\n");
      scanf(" %c", &resp);
      if(resp == 's' || resp == 'S'){
-       readSwap(memory, fp);
+       readSwap(memory, fp); // Recupera processos salvos
        fclose(fp);
        return;
      }
-     remove("swap.txt");
+     remove("swap"); // deleta arquivo de swap;
      fclose(fp);
      return;
 
@@ -150,7 +151,7 @@ void newProcess(Memory *memory) {
   scanf(" %c", &label);
   printf("Tamanho (kbit): \n");
   scanf(" %d", &size);
-  initializeProcess(memory, id, label, size, duration);
+  initializeProcess(memory, id, label, size, duration, 0, 0);
 }
 
 void shut(Memory *memory){
@@ -194,7 +195,7 @@ int swap(Memory *memory){
   MemorySpace *p;
   garbageCollector(memory);
   p = memory->first;
-  fp = fopen ("swap.txt", "w");
+  fp = fopen ("swap", "w");
   if (fp == NULL) {
      printf ("Houve um erro ao gravar a memória em disco.\n");
      fclose (fp);
@@ -220,17 +221,16 @@ void readSwap(Memory *memory, FILE *fp){
   }
   garbageCollector(memory);
   while( (fscanf(fp,"%d %c %d %d\n", &id, &label, &size, &duration))!=EOF )
-    initializeProcess(memory, id, label, size, duration);
+    initializeProcess(memory, id, label, size, duration, 0, 0);
   printf ("Dados restaurados com sucesso!.\n");
-  remove("swap.txt");
+  remove("swap");
   fclose (fp);
   freeSpaceCounter(memory);
   return;
 }
 
-void initializeProcess(Memory *memory, int id, char label, int size, int duration){
+void initializeProcess(Memory *memory, int id, char label, int size, int duration, int initTime, int mode){
   MemorySpace *process, *aux;
-  aux = memory->first;
   int i;
   int startTime = time(NULL);
   garbageCollector(memory);
@@ -240,14 +240,20 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
   process->label = label;
   process->size = size;
   process->duration = duration;
-  process->initialTime = startTime;
+  if(mode == 1)
+    process->initialTime = initTime;
+  else
+    process->initialTime = startTime;
   process->next = process;
   process->prev = process;
   if(spaceVerify(memory, process->size)){ // verifica se há espaço livre na memoria, suficiente para alicar o novo processo;
     i = findSpace(memory, process->size); // Verifica se há necessidade de compactar/organizar memoria
     if(i == -1){
-      compactMemory(memory); //organiza procesos na memoria para alocar o novo processo;
+      keepId = process->id;
+      compactMemory(memory, process); //organiza procesos na memoria para alocar o novo processo;
+      return;
     }
+    aux = memory->first;
     do{
       if(memory->first != NULL && aux->type == H){
         if(aux->size > process->size){
@@ -278,14 +284,16 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
             process->next->size -= process->size;
             process->next->startAt = process->size + 1;
           }
-          logRegister(process, 1);
+          if(mode != 1)
+            logRegister(process, 1);
           return;
         } else if(aux->size == process->size){ //Insercao quando o espaço disponível for igual o tamanho do processo;
           aux->type = P;
           aux->label = label;
           aux->duration = duration;
           aux->initialTime = startTime;
-          logRegister(aux, 1);
+          if(mode != 1)
+            logRegister(aux, 1);
           return;
           }
       }
@@ -301,31 +309,42 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
   }
 }
 
-int compactMemory(Memory *memory){
+void compactMemory(Memory *memory, MemorySpace *process ){
   FILE *fp;
   MemorySpace *p;
-  int size, duration, id  ;
+  int size, duration, id, initialTime  ;
   char label;
 
   p = memory->first;
   fp = fopen ("temp.txt", "w");
   if (fp == NULL) {
      printf ("Erro na compactação\n");
+     sleep(2);
      fclose (fp);
-     return 0;
   }
   do{
     if(p->type == P){
-      fprintf(fp, "%d %c %d %d\n",p->id, p->label, p->size, p->duration);
+      fprintf(fp, "%d %c %d %d %d\n",p->id, p->label, p->size, p->duration,p->initialTime);
     }
     p = p->next;
+    free(p->prev);
   }while(p != memory->first);
   fclose (fp);
+  MemorySpace *hole  = (MemorySpace*) malloc(sizeof(MemorySpace));
+  hole->type = H;           //
+  hole->startAt = 0;        // Criando espaco vazio do tamanho da memória
+  hole->size = MEMORY_SIZE; //
+  hole->next = hole;        //
+  hole->prev = hole;        // Aponta para ele mesmo
+  hole->id = keepId;
+  memory->first = hole;
+  memory->last = hole;      // Como e unico, ele e o ultimo
   fp = fopen ("temp.txt", "r");
-  while( (fscanf(fp,"%d %c %d %d\n",&id, &label, &size, &duration))!=EOF )
-    initializeProcess(memory, id, label, size, duration);
+  while( (fscanf(fp,"%d %c %d %d %d\n",&id, &label, &size, &duration, &initialTime))!=EOF )
+    initializeProcess(memory, id, label, size, duration, initialTime, 1);
   fclose (fp);
-  return 1;
+  remove("temp.txt");
+  initializeProcess(memory, keepId, process->label, process->size, process->duration, 0, 0);
 }
 
 int findSpace(Memory *memory, int size){
@@ -469,6 +488,7 @@ while(closeThreads){
 
 void *showMemory(Memory *memory){
   MemorySpace *p;
+  int i;
   pthread_t t2;
   if (pthread_create(&t2, NULL, (void*)closeThread, NULL)) {
    perror("pthread_create1");
@@ -477,8 +497,8 @@ void *showMemory(Memory *memory){
   while(closeThreads){
     p = memory->first;
     garbageCollector(memory);
-
-    printf(" ________________________________________________________\n");
+    printf("|                 GERENCIADOR DE MEMÓRIA                 |\n" );
+    printf("|________________________________________________________|\n");
     printf("| ID | Processo | Tamanho | Endereço | Tempo de Execução |\n");
     printf("|____|__________|_________|__________|___________________|\n");
 
@@ -493,14 +513,28 @@ void *showMemory(Memory *memory){
         printf("|                                                        |\n");
         printf("|________________________________________________________|\n");
       }
+
       p = p->next;
     }while(p != memory->first);
+    p = memory->first;
+    printf("| Uso da Memória: %3d%%                                   |\n|",(100*(MEMORY_SIZE - memory->free_space))/MEMORY_SIZE);
+    do{
+      if(p->type == P){
+        for(i=0;i<p->size;i++)
+          printf("%c", p->label);
+      }
+      else if(p->type == H){
+        for(i=0;i<p->size;i++)
+          printf("-");
+      }
+        p = p->next;
+    }while(p != memory->first);
+    printf("|\n|________________________________________________________|\n");
+    printf("|Memória Livre:  %5d Kbits                             |\n", memory->free_space);
+    printf("|Memória Ocupada:%5d Kbits                             |\n", MEMORY_SIZE - memory->free_space);
+    printf("|Memória Total:  %5d Kbits                             |\n", MEMORY_SIZE);
 
-
-    printf("\nMemória Livre:  %5d Kbits\n", memory->free_space);
-    printf("Memória Ocupada:%5d Kbits\n", MEMORY_SIZE - memory->free_space);
-    printf("Memória Total:  %5d Kbits\n", MEMORY_SIZE);
-    printf("________________________________________________________\n");
+    printf("|________________________________________________________|\n");
     printf("\nAperte Enter para continuar.\n");
     sleep(1);
     system("clear");
