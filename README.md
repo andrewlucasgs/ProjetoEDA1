@@ -4,6 +4,7 @@
 #### Alunos:
 - Andrew Lucas Guedes de Souza - 16/0023921
 - Nivaldo Pereira Lopo Junior - 12/0039460
+- Max Henrique Barbosa - 16/0047013
 ---
 ## Relatório de Projeto
 #### Índice
@@ -181,7 +182,7 @@ Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a 
 
 ## Relatórios individuais
 
-##### Andrew Lucas Guedes de Souza 16/0023921
+#### Andrew Lucas Guedes de Souza 16/0023921
 ###### Atividades:
 - Implementação Geral  
 - Escrever relatório
@@ -200,6 +201,8 @@ Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a 
 
 
 #### Max Henrique Barbosa 16/0047013
+<div style="text-align: justify">
 Ingressei no grupo dia 10 onde até o primeiro momento havia apenas uma ideia das possíveis funções para implementação do que foi solicitado. Acredito pessoalmente não ter sido de grande auxílio devido a algumas limitações da minha parte, porém tentei auxiliar com alguma coisa que estivesse ao meu alcance. Para a realização do trabalho, procuramos formas de entender como uma memória se comporta para elaborar uma abordagem que fosse possível de sanar o problema.<br>
 Definimos formas de criar, encerrar e mostrar os processos em execução. Das dificuldades houve uma certa complicação com o tempo e com as possíveis ferramentas que poderíamos utilizar para resolver coisas de alguns requisitos como, a exibição do tempo de cada processo. Além de procurar outras soluções que viessem de encontro com coisas que eram de nosso conhecimento. Houve ao longo do desenvolvimento pesquisas dos membros e solicitação de auxílio com outros alunos que estavam um pouco mais a frente do curso que entendiam melhor do assunto.<br>
 Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desde tempo e parâmetros a uma possibilidade de poder gravar dados em arquivo.
+</div>
