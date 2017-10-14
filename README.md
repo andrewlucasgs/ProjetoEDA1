@@ -86,13 +86,11 @@ O tipo de estrutura de dados mais recomendado para gerenciamento de memória é 
 <div style="text-align: justify"> Inicializa a lista encadeada, criando o primeiro elemento, um espaço vazio do tamanho da memória definida. Registra a inicialização do sistema em no log. Caso exista o arquivo de swap, pergunta ao usuário se ele deseja recuperar os processos, caso sim, ele realiza a inicialização dos processos a partir do arquivo.
 
 </div>
-<br>
 
 ##### void shut(Memory * memory)
 <div style="text-align: justify">
 Encerra o programa. Confirma se o usuário quer realmente sair, caso não retorna ao programa, caso sim, se não houver processos em execução ele registra o encerramento no log, e termina. Caso haja processo em execução ele pergunta se deseja guardar o processo em disco. Se sim ele realiza o swap, se não ele registra e sai do sistema.
 </div>
-<br>
 
 ##### int swap(Memory * memory)
 <div style="text-align: justify">
@@ -139,6 +137,7 @@ Execultada em uma thread, espera pela entrada do usuário até que ele aperte a 
 <div style="text-align: justify">
 Cria a thread em que a função showMemory irá ser execultada.
 </div>
+
 ##### MemorySpace * getProcess(Memory * memory, int id)
 <div style="text-align: justify">
 Percorre a lista em busca de um processo com o id igual ao do parâmetro, se encontrar, retorna o processo, se não retorna nulo.
@@ -148,35 +147,43 @@ Percorre a lista em busca de um processo com o id igual ao do parâmetro, se enc
 <div style="text-align: justify">
 Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a função shutProcess.
 </div>
+
 ##### void shutProcess(Memory * memory, int id)
 <div style="text-align: justify">
 Força encerramento do processo. Através do id passado como parâmetro, muda o tipo do processo para buraco, e registra o encerramento no log. Se algum dos espaços vizinhos também for um buraco chama a função que mescla dois buracos em um só.
 </div>
+
 ##### void freeSpaceCounter(Memory * memory)
 <div style="text-align: justify">
 Soma todos os tamanhos dos buracos da memória e atribui ao atributo free_space, no Cabecalho da lista.
 </div>
+
 ##### int findSpace(Memory * memory, int size)
 <div style="text-align: justify">
 Pecorre a lista, verificando se há algum espaço livre continuo maior ou igual ao tamanho do processo, se sim retorna o endereço do espaço, se não retorna -1.
 </div>
+
 ##### void compactMemory(Memory * memory, MemorySpace * process)
 <div style="text-align: justify">
 Realiza a compactação da memória, quando houver espaço para alocar o novo processo, porém não continuo.<br>
 A compactação é feita copiando todos processos em execução para um arquivo temporário e depois repassando os processos para a lista seguido da exclusão do arquivo.
 </div>
+
 ##### void mergeHole(Memory * memory, MemorySpace * p)
 <div style="text-align: justify">
 Recebe o id do processo que o usuário deseja forçar o encerramento, e chama a função shutProcess.
 </div>
+
 ##### void garbageCollector(Memory * memory)
 <div style="text-align: justify">
 Através de um loop do-while analisa todos os processos e verifica se algum deles ja foi finalizado, comparando seu tempo inicial e sua duração. Ao final utiliza a função freeSpaceCounter para atualizar a memoria disponível.
 </div>
+
 ##### void logRegister(MemorySpace * p, int mode)
 <div style="text-align: justify">
 Salva em um arquivo texto o log de atividades do gerenciador de memoria, informando o inicio e encerramento do sistema além da criação e encerramento de processos.
 </div>
+
 ##### void showLog(void);
 <div style="text-align: justify">
 Imprime na tela o log de atividades do sistema, realizado pela função logRegister
@@ -186,28 +193,48 @@ Imprime na tela o log de atividades do sistema, realizado pela função logRegis
 #### 5. Problemas conhecidos do projeto
 - A barra de exebição dos processos na memória, eventualmente fica desalinhada da tabela;
 
-#### 6. Melhorias do projeto
+#### 6. Melhorias para o projeto
 - Exibir o a tabela de processos em execução na mesma tela do menu;
 - Desenvolver uma melhor interface gráfica.
+- Método mais eficiente para compactação.
 
 
 ## Relatórios individuais
 
 #### Andrew Lucas Guedes de Souza 16/0023921
 ###### Atividades:
-- Implementação Geral  
-- Escrever relatório
-- Organizar estrutura do programa
-- Gerenciar o projeto
+- **Implementação Geral**  
+  Planejamento de funções e implementação, além de implementar a exibição das telas do sistema.
+- **Escrever relatório**
+  Descrever funções, objetivos e requisitos do sistema;
+- **Organizar estrutura do programa**
+  Planejar quais funções necessárias para gerenciamento da memória e qual estrutura utilizar.
+- **Gerenciar o projeto**
+  Distribuir atividades entre os membros do grupo, e guiar o desenvolvimento do sistema.
 
 ###### Estudos:
 - Uso de thread para realizar a verificação e encerramento dos processos, que concluiram o tempo de execução.
-- Utilização da bilioteca time.h e como ela funciona, para implementar a verificação do tempo de execução de um processo;
+- Como utilizar a biblioteca pthread, para criação e gerenciamento de threads em C.
+- Utilização da bilioteca time.h e como ela funciona, para implementar a verificação do tempo de execução de um processo.
+- Como o gerenciamento de memória é realizado, visando planejar quais funções e procedimentos necessários para realização do sistema simulador de gerenciamento de memória.
 
 ###### Dificuldades:
-- Implementar um método eficiente de compactação da memória
-- Atualização de tela.
+- Não conseguir implementar um método eficiente de compactação da memória feita com arquivo temporário.
+- Consegui identificar onde poderia ser utilizada uma estrutura de pilha, mas não consegui implementar a sua utilização.
 
+###### As funções mais difíceis de implementar foram:
+- initializeProcess(inicializar e alocar um processo):
+  Tive dificuldades em implemntar uma função que abrangesse todos os casos de inserção de um novo processo na lista, mas após alguns estudos de como é feita a alocação de um novo processo na memória, consegui entender a lógica, e tornou a implementação mais fácil.
+- compactMemory (compactar memória):
+  Tentei realizar esse metódo utilizando a estrutura de pilhas, sem sucesso. Mas segui a mesma lógica de pilhas, implementando em arquivo, mesmo sabendo que não é um processo eficiente;
+- showMemory (mostrar informações):
+  No inicio foi fácil, porém depois que decidimos implementar novas funções, essa função se tornou mais complexa, e foi necessário investir mais tempo no estudo de sua implementação e na implementação de fato.
+
+###### Análise Pessoal do projeto
+No início, não pensei que seria muito complicado elaborar esse sistema, e por estar muito ocupado com outras disciplinas, adiei o início da implementação desse projeto. Porém quando comecei a estudar como implementaria, percebi que não seria fácil. E comecei uma maratona de estudo e desenvolvimento do sistema, assim consegui aprender bastante sobre gerenciamento de memória, mais a respeito da linguagem C, como uso de threads, bibliotecas time.h e outras funções que eu não conhecia.<br>
+Com a chegada do prazo de entrega, o projeto percebi que não teria tempo suficiente para termina-lo, então decidimos, atrasar, porém entregar um projeto bem feito para compensar o atraso, implementando novas pequenas funcionalidades e deixando o visual mais bonito.<br>
+Por fim, gostei bastante da proposta do projeto, consegui aprender bastante informação nova, e úteis para aplicar em projetos futuros.
+***
 
 #### Max Henrique Barbosa 16/0047013
 <div style="text-align: justify">
