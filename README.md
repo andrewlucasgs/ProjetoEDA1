@@ -1,6 +1,17 @@
 # Gerenciamento de memória em sistemas operacionais
 ## Projeto para a disciplina Estruturas de Dados e Algoritmos
 ***
+### Como utilizar
+- No terminal digite:
+
+```
+ $ git clone https://github.com/andrewlucasgs/ProjetoEDA1.git
+ $ cd ProjetoEDA1
+ $ gcc MemoryManager.c -o MemoryManager -pthread
+ $ ./MemoryManager
+```
+
+
 ## Alunos:
 
 - Andrew Lucas Guedes de Souza - 16/0023921  
