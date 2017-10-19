@@ -272,6 +272,7 @@ No início, não pensei que seria muito complicado elaborar esse sistema, e por 
 Com a chegada do prazo de entrega, o projeto percebi que não teria tempo suficiente para termina-lo, então decidimos, atrasar, porém entregar um projeto bem feito para compensar o atraso, implementando novas pequenas funcionalidades e deixando o visual mais bonito.<br>
 Por fim, gostei bastante da proposta do projeto, consegui aprender bastante informação nova, e úteis para aplicar em projetos futuros.
 </div>
+
 ***
 
 ### Max Henrique Barbosa 16/0047013
@@ -280,6 +281,7 @@ Ingressei no grupo dia 10 onde até o primeiro momento havia apenas uma ideia da
 Definimos formas de criar, encerrar e mostrar os processos em execução. Das dificuldades houve uma certa complicação com o tempo e com as possíveis ferramentas que poderíamos utilizar para resolver coisas de alguns requisitos como, a exibição do tempo de cada processo. Além de procurar outras soluções que viessem de encontro com coisas que eram de nosso conhecimento. Houve ao longo do desenvolvimento pesquisas dos membros e solicitação de auxílio com outros alunos que estavam um pouco mais a frente do curso que entendiam melhor do assunto.<br>
 Tirando isso conseguimos alcançar grande parte dos requisitos solicitados, desde tempo e parâmetros a uma possibilidade de poder gravar dados em arquivo.
 </div>
+
 ***
 
 ### Nivaldo Pereira Lopo Junior 12/0039460
