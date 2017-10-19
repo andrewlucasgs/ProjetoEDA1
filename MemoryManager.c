@@ -21,9 +21,10 @@
 #include<unistd.h>
 #include <pthread.h>
 #include<string.h>
+#include <ctype.h> // Validar entrada;
 
 
-#define MEMORY_SIZE 100 // tamanho da memória
+#define MEMORY_SIZE 1000 // tamanho da memória
 #define P 1
 #define H 0
 
@@ -114,8 +115,8 @@ int main() {
               printf("|                 GERENCIADOR DE MEMÓRIA                 |\n" );
               printf("|________________________________________________________|\n");
               printf("|                                                        |\n");
-              printf("|   TRABALHO P/ DISCIPLINA DE ESTRUTURA DE DADOS E       |\n");
-              printf("|                                       ALGORITMOS       |\n");
+              printf("|   TRABALHO P/ DISCIPLINA DE ESTRUTURAS DE DADOS E      |\n");
+              printf("|                                        ALGORITMOS      |\n");
               printf("|                                                        |\n");
               printf("|   ANDREW LUCAS GUEDES DE SOUZA - 16/0023921            |\n");
               printf("|   NIVALDO PEREIRA LOPO JUNIOR  - 12/0039460            |\n");
@@ -166,7 +167,7 @@ void initialize(Memory *memory){
 
 void newProcess(Memory *memory) {
   char label;
-  int duration, size, id;
+  int duration, size=-1, id;
   srand(time(NULL)); /*parameter for randamization of process duration */
   id = idGeneretor; // define id apartir do gerador de id
   idGeneretor++; // incrementa gerador de id
@@ -177,10 +178,11 @@ void newProcess(Memory *memory) {
   printf("|   ID do processo: %4d                                 |\n", id);
   printf("|   O processo terá %3d segundos de duração.             |\n", duration);
   printf("|________________________________________________________|\n|\n");
-  printf("|   Digite um rótulo para o processo (1 caracter): ");
+  printf("|   Digite um rótulo para o processo (caracter A-z): ");
   scanf(" %c", &label);
+  while(!isalpha(label)){scanf(" %c", &label);};
   printf("|   Tamanho (kbit): ");
-  scanf(" %d", &size);
+  while(size <= 0){scanf(" %d", &size);};
   // incializa processos com os dados recebidos do usuário
   initializeProcess(memory, id, label, size, duration, 0, 0);
 }
@@ -340,10 +342,11 @@ void initializeProcess(Memory *memory, int id, char label, int size, int duratio
       aux = aux->next;
     }while(aux != memory->first);
   }else{
+    system("clear");
     printf("\n|                 GERENCIADOR DE MEMÓRIA                 |\n" );
     printf("|________________________________________________________|\n");
     printf("|                                                        |\n");
-    printf("|   Não foi possível alocar memória para o processo: %c  |\n", process->label);
+    printf("|   Não foi possível alocar memória para o processo: %2c  |\n", process->label);
     printf("|________________________________________________________|\n");
     sleep(3);
     system("clear");
